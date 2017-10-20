@@ -196,7 +196,7 @@ var initHttpServer = () => {
                 });
                 for (var j = 0; j < topic[0].data.options.length; j++) {
                     if (!optionVoteCount[j]) {
-                        optionVoteCount[j] = null;
+                        optionVoteCount[j] = 0;
                     }
                 }
                 topic[0].data.optionVoteCount = optionVoteCount
@@ -226,7 +226,7 @@ var initHttpServer = () => {
                 });
                 for (var j = 0; j < topicsFromBlockChain[i].data.options.length; j++) {
                     if (!optionVoteCount[j]) {
-                        optionVoteCount[j] = null;
+                        optionVoteCount[j] = 0;
                     }
                 }
                 topicsFromBlockChain[i].data.optionVoteCount = optionVoteCount
