@@ -20,6 +20,19 @@ class Block {
     }
 }
 
+class TopicDataBlock {
+    constructor(topicId, topicTitle, topicDesc, startDate, endDate, options, userId) {
+        this.type = "T";
+        this.topicId = topicId;
+        this.topicTitle = topicTitle;
+        this.topicDesc = topicDesc;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.options = options;
+        this.userId = userId;
+    }
+}
+
 var sockets = [];
 var MessageType = {
     QUERY_LATEST: 0,
@@ -77,14 +90,23 @@ var initHttpServer = () => {
     //     res.send();
     // });
     // This is the base API to be referred for other apis
+    // add topic
     app.post('/topic', (req, res) => {
-        req.body.type = 'T';
-        req.body.topicId = uuidv1();
+    	req.body.type = 'T';
         customValidations(req.body, function (err, response) {
             if (err) {
                 res.status("400").send(err)
             } else {
-                mineBlock(req, res)
+            	var topicDataBlock = new TopicDataBlock(
+                		uuidv1(),
+    	    			req.body.topicTitle,
+    	    			req.body.topicDesc,
+    	    			req.body.startDate,
+    	    			req.body.endDate,
+    	    			req.body.options,
+    	    			req.body.userId
+                	);
+                mineBlock(topicDataBlock, res)
             }
         })
     });
@@ -122,8 +144,8 @@ var initHttpServer = () => {
     app.listen(http_port, () => console.log('Listening http on port: ' + http_port));
 };
 
-function mineBlock(req, res){
-  var newBlock = generateNextBlock(req.body.data);
+function mineBlock(data, res){
+  var newBlock = generateNextBlock(data);
   addBlock(newBlock);
   broadcast(responseLatestMsg());
   console.log('block added: ' + JSON.stringify(newBlock));
