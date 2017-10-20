@@ -1,7 +1,7 @@
 jQuery(document).ready(function () {
 
      $.ajax({
-			                url: "localhost:8080/topic",
+			                url: "http://localhost:3001/topic",
 			                type: "get",
 			                success: function (data) {
 			                	data.forEach(function (item) {

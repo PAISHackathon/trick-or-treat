@@ -18,8 +18,7 @@ function submitTopic() {
             options: options,
             userId: localStorage.getItem("userid")
         }),
-        dataType: 'json',
-        success: function (data) {
+        success: function () {
             alert('Topic Created Successfully.')
             window.location = 'SelectTopic.html'
         },
