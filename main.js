@@ -4,6 +4,7 @@ var express = require("express");
 var bodyParser = require('body-parser');
 var WebSocket = require("ws");
 var customValidations = require("./customValidations");
+var uuidv1 = require('uuid/v1');
 
 var http_port = process.env.HTTP_PORT || 3001;
 var p2p_port = process.env.P2P_PORT || 6001;
@@ -16,6 +17,19 @@ class Block {
         this.timestamp = timestamp;
         this.data = data;
         this.hash = hash.toString();
+    }
+}
+
+class TopicDataBlock {
+    constructor(topicId, topicTitle, topicDesc, startDate, endDate, options, userId) {
+        this.type = "T";
+        this.topicId = topicId;
+        this.topicTitle = topicTitle;
+        this.topicDesc = topicDesc;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.options = options;
+        this.userId = userId;
     }
 }
 
@@ -76,18 +90,28 @@ var initHttpServer = () => {
     //     res.send();
     // });
     // This is the base API to be referred for other apis
+    // add topic
     app.post('/topic', (req, res) => {
-        req.body.data.type = 'T';
+    	req.body.type = 'T';
         customValidations(req.body, function (err, response) {
             if (err) {
                 res.status("400").send(err)
             } else {
-                mineBlock(req, res)
+            	var topicDataBlock = new TopicDataBlock(
+                		uuidv1(),
+    	    			req.body.topicTitle,
+    	    			req.body.topicDesc,
+    	    			req.body.startDate,
+    	    			req.body.endDate,
+    	    			req.body.options,
+    	    			req.body.userId
+                	);
+                mineBlock(topicDataBlock, res)
             }
         })
     });
     app.post('/vote', (req, res) => {
-        req.body.data.type = 'V';
+        req.body.type = 'V';
         customValidations(req.body, function (err, response) {
             if (err) {
                 res.status("400").send(err)
@@ -120,8 +144,8 @@ var initHttpServer = () => {
     app.listen(http_port, () => console.log('Listening http on port: ' + http_port));
 };
 
-function mineBlock(req, res){
-  var newBlock = generateNextBlock(req.body.data);
+function mineBlock(data, res){
+  var newBlock = generateNextBlock(data);
   addBlock(newBlock);
   broadcast(responseLatestMsg());
   console.log('block added: ' + JSON.stringify(newBlock));
