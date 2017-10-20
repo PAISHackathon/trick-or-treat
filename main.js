@@ -175,6 +175,33 @@ var initHttpServer = () => {
 //    });
 
 
+//    app.get('/topic', (req, res) => {
+//           if (req.query.topicId) {
+//               var topic = (blockchain.filter(a => a.data.type == "T")).filter(function (b) {
+//                   if (b.data && b.data.topicId == req.query.topicId) {
+//                       return b
+//                   } else {
+//                       return null;
+//                   }
+//               });
+//               con
+//               if (topic.length > 0) {
+//                   res.send(JSON.stringify(topic[0].data));
+//               } else {
+//                   res.send();
+//               }
+//           } else {
+//               var topicsFromBlockChain = blockchain.filter(a => a.data.type == "T")
+//               var topics = []
+//               for (var i = 0; i < topicsFromBlockChain.length; i++) {
+//                   topics.push(topicsFromBlockChain[i].data)
+//               }
+//               //topics.optionVoteCount = countVotes(topic)
+//               //res.send(JSON.stringify(topics));
+//               res.send(JSON.stringify(countVotes(topic)));
+//           }
+//       });
+
     app.get('/topic', (req, res) => {
            if (req.query.topicId) {
                var topic = (blockchain.filter(a => a.data.type == "T")).filter(function (b) {
@@ -184,8 +211,22 @@ var initHttpServer = () => {
                        return null;
                    }
                });
-               con
                if (topic.length > 0) {
+                   var optionVoteCount = []
+                   blockchain.filter(a => a.data.type == "V").filter(function (b) {
+                       if (b.data.topicId == topic.topicId) {
+                           if (optionVoteCount[b.data.optionId]) {
+                               optionVoteCount[b.data.optionId] = optionVoteCount[b.data.optionId] + 1;
+                               return optionVoteCount
+                           } else {
+                               optionVoteCount[b.data.optionId] = 1
+                               return optionVoteCount
+                           }
+                       } else {
+                           return null;
+                       }
+                   });
+                   topic[0].data.optionVoteCount = optionVoteCount
                    res.send(JSON.stringify(topic[0].data));
                } else {
                    res.send();
@@ -194,14 +235,28 @@ var initHttpServer = () => {
                var topicsFromBlockChain = blockchain.filter(a => a.data.type == "T")
                var topics = []
                for (var i = 0; i < topicsFromBlockChain.length; i++) {
+
+                   var optionVoteCount = []
+                   blockchain.filter(a => a.data.type == "V").filter(function (b) {
+                       if (b.data.topicId == topicsFromBlockChain[i].data.topicId) {
+                           if (optionVoteCount[b.data.optionId]) {
+                               optionVoteCount[b.data.optionId] = optionVoteCount[b.data.optionId] + 1;
+                               return optionVoteCount
+                           } else {
+                               optionVoteCount[b.data.optionId] = 1
+                               return optionVoteCount
+                           }
+                       } else {
+                           return null;
+                       }
+                   });
+                   topicsFromBlockChain[i].data.optionVoteCount = optionVoteCount
                    topics.push(topicsFromBlockChain[i].data)
                }
-               //topics.optionVoteCount = countVotes(topic)
-               //res.send(JSON.stringify(topics));
-               res.send(JSON.stringify(countVotes(topic)));
+
+               res.send(JSON.stringify(topics));
            }
        });
-
 
     app.get('/vote', (req, res) => {
       if(req.params.userId) {
