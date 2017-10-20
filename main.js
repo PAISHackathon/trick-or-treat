@@ -88,7 +88,7 @@ var blockchain = [getGenesisBlock()];
 
 var initHttpServer = () => {
     var app = express();
-    
+
     // Add headers
     app.use(function (req, res, next) {
 
@@ -108,7 +108,7 @@ var initHttpServer = () => {
         // Pass to next layer of middleware
         next();
     });
-    
+
     app.use(bodyParser.json());
 
     app.get('/blocks', (req, res) => res.send(JSON.stringify(blockchain)));
@@ -122,20 +122,20 @@ var initHttpServer = () => {
     // This is the base API to be referred for other apis
     // add topic
     app.post('/topic', (req, res) => {
-    	req.body.type = 'T';
+        req.body.type = 'T';
         customValidations(req.body, function (err, response) {
             if (err) {
                 res.status("400").send(err)
             } else {
-//            	var topicDataBlock = new TopicDataBlock(
-//                		uuidv1(),
-//    	    			req.body.topicTitle,
-//    	    			req.body.topicDesc,
-//    	    			req.body.startDate,
-//    	    			req.body.endDate,
-//    	    			req.body.options,
-//    	    			req.body.userId
-//                	);
+                //            	var topicDataBlock = new TopicDataBlock(
+                //                		uuidv1(),
+                //    	    			req.body.topicTitle,
+                //    	    			req.body.topicDesc,
+                //    	    			req.body.startDate,
+                //    	    			req.body.endDate,
+                //    	    			req.body.options,
+                //    	    			req.body.userId
+                //                	);
                 var topicDataBlock = addTopic(req.body);
                 if (topicDataBlock) {
                     mineBlock(topicDataBlock, res)
@@ -151,12 +151,12 @@ var initHttpServer = () => {
             if (err) {
                 res.status("400").send(err)
             } else {
-            	// add validation
-//            	var voteDataBlock = new VoteDataBlock(
-//            			req.body.userId,
-//            			req.body.topicId,
-//            			req.body.optionId
-//                	);
+                // add validation
+                //            	var voteDataBlock = new VoteDataBlock(
+                //            			req.body.userId,
+                //            			req.body.topicId,
+                //            			req.body.optionId
+                //                	);
                 var voteDataBlock = addVote(req.body);
                 if (voteDataBlock) {
                     mineBlock(voteDataBlock, res)
@@ -166,104 +166,110 @@ var initHttpServer = () => {
             }
         })
     });
-//    app.get('/topic', (req, res) => {
-//      if(req.params.id) {
-//        // for particular topic
-//      } else {
-//        // for all topics
-//      }
-//    });
-
-
-//    app.get('/topic', (req, res) => {
-//           if (req.query.topicId) {
-//               var topic = (blockchain.filter(a => a.data.type == "T")).filter(function (b) {
-//                   if (b.data && b.data.topicId == req.query.topicId) {
-//                       return b
-//                   } else {
-//                       return null;
-//                   }
-//               });
-//               con
-//               if (topic.length > 0) {
-//                   res.send(JSON.stringify(topic[0].data));
-//               } else {
-//                   res.send();
-//               }
-//           } else {
-//               var topicsFromBlockChain = blockchain.filter(a => a.data.type == "T")
-//               var topics = []
-//               for (var i = 0; i < topicsFromBlockChain.length; i++) {
-//                   topics.push(topicsFromBlockChain[i].data)
-//               }
-//               //topics.optionVoteCount = countVotes(topic)
-//               //res.send(JSON.stringify(topics));
-//               res.send(JSON.stringify(countVotes(topic)));
-//           }
-//       });
 
     app.get('/topic', (req, res) => {
-           if (req.query.topicId) {
-               var topic = (blockchain.filter(a => a.data.type == "T")).filter(function (b) {
-                   if (b.data && b.data.topicId == req.query.topicId) {
-                       return b
-                   } else {
-                       return null;
-                   }
-               });
-               if (topic.length > 0) {
-                   var optionVoteCount = []
-                   blockchain.filter(a => a.data.type == "V").filter(function (b) {
-                       if (b.data.topicId == topic.topicId) {
-                           if (optionVoteCount[b.data.optionId]) {
-                               optionVoteCount[b.data.optionId] = optionVoteCount[b.data.optionId] + 1;
-                               return optionVoteCount
-                           } else {
-                               optionVoteCount[b.data.optionId] = 1
-                               return optionVoteCount
-                           }
-                       } else {
-                           return null;
-                       }
-                   });
-                   topic[0].data.optionVoteCount = optionVoteCount
-                   res.send(JSON.stringify(topic[0].data));
-               } else {
-                   res.send();
-               }
-           } else {
-               var topicsFromBlockChain = blockchain.filter(a => a.data.type == "T")
-               var topics = []
-               for (var i = 0; i < topicsFromBlockChain.length; i++) {
+        if (req.query.topicId) {
+            var topic = (blockchain.filter(a => a.data.type == "T")).filter(function (b) {
+                if (b.data && b.data.topicId == req.query.topicId) {
+                    return b
+                } else {
+                    return null;
+                }
+            });
+            if (topic.length > 0) {
+                var optionVoteCount = []
+                blockchain.filter(a => a.data.type == "V").filter(function (b) {
+                    console.log(b.data.topicId)
+                    console.log(topic[0].data.topicId)
+                    if (b.data.topicId == topic[0].data.topicId) {
+                        var optionIndex = topic[0].data.options.indexOf(b.data.optionId)
+                        if (optionVoteCount[optionIndex]) {
+                            optionVoteCount[optionIndex] = optionVoteCount[optionIndex] + 1;
+                            return optionVoteCount
+                        } else {
+                            optionVoteCount[optionIndex] = 1
+                            return optionVoteCount
+                        }
+                    } else {
+                        return null;
+                    }
+                });
+                for (var j = 0; j < topic[0].data.options.length; j++) {
+                    if (!optionVoteCount[j]) {
+                        optionVoteCount[j] = null;
+                    }
+                }
+                topic[0].data.optionVoteCount = optionVoteCount
+                res.send(JSON.stringify(topic[0].data));
+            } else {
+                res.send();
+            }
+        } else {
+            var topicsFromBlockChain = blockchain.filter(a => a.data.type == "T")
+            var topics = []
+            for (var i = 0; i < topicsFromBlockChain.length; i++) {
 
-                   var optionVoteCount = []
-                   blockchain.filter(a => a.data.type == "V").filter(function (b) {
-                       if (b.data.topicId == topicsFromBlockChain[i].data.topicId) {
-                           if (optionVoteCount[b.data.optionId]) {
-                               optionVoteCount[b.data.optionId] = optionVoteCount[b.data.optionId] + 1;
-                               return optionVoteCount
-                           } else {
-                               optionVoteCount[b.data.optionId] = 1
-                               return optionVoteCount
-                           }
-                       } else {
-                           return null;
-                       }
-                   });
-                   topicsFromBlockChain[i].data.optionVoteCount = optionVoteCount
-                   topics.push(topicsFromBlockChain[i].data)
-               }
+                var optionVoteCount = []
+                blockchain.filter(a => a.data.type == "V").filter(function (b) {
+                    if (b.data.topicId == topicsFromBlockChain[i].data.topicId) {
+                        var optionIndex = topicsFromBlockChain[i].data.options.indexOf(b.data.optionId)
+                        if (optionVoteCount[optionIndex]) {
+                            optionVoteCount[optionIndex] = optionVoteCount[optionIndex] + 1;
+                            return optionVoteCount
+                        } else {
+                            optionVoteCount[optionIndex] = 1
+                            return optionVoteCount
+                        }
+                    } else {
+                        return null;
+                    }
+                });
+                for (var j = 0; j < topicsFromBlockChain[i].data.options.length; j++) {
+                    if (!optionVoteCount[j]) {
+                        optionVoteCount[j] = null;
+                    }
+                }
+                topicsFromBlockChain[i].data.optionVoteCount = optionVoteCount
+                topics.push(topicsFromBlockChain[i].data)
+            }
 
-               res.send(JSON.stringify(topics));
-           }
-       });
+            res.send(JSON.stringify(topics));
+        }
+    });
 
     app.get('/vote', (req, res) => {
-      if(req.params.userId) {
-        // for particular user
-    } else {
-        // return err
-    }
+        if (req.query.userId) {
+            var votes = []
+            var vote = (blockchain.filter(a => a.data.type == "V")).filter(function (b) {
+                if (b.data && b.data.userId == req.query.userId) {
+                    return b
+                } else {
+                    return null;
+                }
+            });
+            if (vote.length > 0) {
+                for (var i = 0; i < vote.length; i++) {
+                    blockchain.filter(a => a.data.type == "T").filter(function (b) {
+                        if (b.data.topicId == vote[i].data.topicId) {
+                            vote[i].data.topicDesc = b.data.topicDesc
+                            vote[i].data.startDate = b.data.startDate
+                            vote[i].data.endDate = b.data.endDate
+                            vote[i].data.topicTitle = b.data.topicTitle
+                            votes.push(vote[i].data)
+                        } else {
+                            return null;
+                        }
+                    });
+                }
+
+                res.send(JSON.stringify(votes));
+
+            } else {
+                res.send();
+            }
+        } else {
+            res.status(400).send("userId is missing");
+        }
     });
     app.get('/peers', (req, res) => {
         res.send(sockets.map(s => s._socket.remoteAddress + ':' + s._socket.remotePort));
@@ -275,18 +281,20 @@ var initHttpServer = () => {
     app.listen(http_port, () => console.log('Listening http on port: ' + http_port));
 };
 
-function mineBlock(data, res){
-  var newBlock = generateNextBlock(data);
-  addBlock(newBlock);
-  broadcast(responseLatestMsg());
-  console.log('block added: ' + JSON.stringify(newBlock));
-  res.send();
+function mineBlock(data, res) {
+    var newBlock = generateNextBlock(data);
+    addBlock(newBlock);
+    broadcast(responseLatestMsg());
+    console.log('block added: ' + JSON.stringify(newBlock));
+    res.send();
 
 }
 
 
 var initP2PServer = () => {
-    var server = new WebSocket.Server({port: p2p_port});
+    var server = new WebSocket.Server({
+        port: p2p_port
+    });
     server.on('connection', ws => initConnection(ws));
     console.log('listening websocket p2p port on: ' + p2p_port);
 
@@ -423,10 +431,15 @@ var isValidChain = (blockchainToValidate) => {
 };
 
 var getLatestBlock = () => blockchain[blockchain.length - 1];
-var queryChainLengthMsg = () => ({'type': MessageType.QUERY_LATEST});
-var queryAllMsg = () => ({'type': MessageType.QUERY_ALL});
-var responseChainMsg = () =>({
-    'type': MessageType.RESPONSE_BLOCKCHAIN, 'data': JSON.stringify(blockchain)
+var queryChainLengthMsg = () => ({
+    'type': MessageType.QUERY_LATEST
+});
+var queryAllMsg = () => ({
+    'type': MessageType.QUERY_ALL
+});
+var responseChainMsg = () => ({
+    'type': MessageType.RESPONSE_BLOCKCHAIN,
+    'data': JSON.stringify(blockchain)
 });
 var responseLatestMsg = () => ({
     'type': MessageType.RESPONSE_BLOCKCHAIN,
@@ -450,11 +463,11 @@ var addVote = (blockData) => {
     var status = true;
     blockchain.forEach((block) => {
         console.log(block);
-        if(block.data.type == "V") {
-            if(block.data.userId == userId) {
+        if (block.data.type == "V") {
+            if (block.data.userId == userId) {
                 status = false;
             }
-        } else if(block && block.data && block.data.type == "T" && block.data.topicId == topicId) {
+        } else if (block && block.data && block.data.type == "T" && block.data.topicId == topicId) {
             topicBlock = block.data;
             status = false;
             if (block.data.options) {
@@ -483,12 +496,12 @@ var addTopic = (blockData) => {
 
     var status = true;
     blockchain.forEach((block) => {
-        if(block && block.data) {
+        if (block && block.data) {
             //if(block.data.type == "T" && block.data.topicId == topicId) {
-            if(block.data.type == "T"
-                && block.data.topicTitle == topicTitle
-                && block.data.startDate == startDate
-                && block.data.endDate == endDate) {
+            if (block.data.type == "T" &&
+                block.data.topicTitle == topicTitle &&
+                block.data.startDate == startDate &&
+                block.data.endDate == endDate) {
                 status = false;
             }
         }
@@ -496,44 +509,44 @@ var addTopic = (blockData) => {
 
     if (status) {
         var topicDataBlock = new TopicDataBlock(
-                                  		uuidv1(),
-                      	    			blockData.topicTitle,
-                      	    			blockData.topicDesc,
-                      	    			blockData.startDate,
-                      	    			blockData.endDate,
-                      	    			blockData.options,
-                      	    			blockData.userId
-                                  	);
+            uuidv1(),
+            blockData.topicTitle,
+            blockData.topicDesc,
+            blockData.startDate,
+            blockData.endDate,
+            blockData.options,
+            blockData.userId
+        );
         //console.log(tdb);
         return topicDataBlock;
     }
 }
 
-function countVotes () {
+function countVotes() {
     var countByTopic = {
-        "topic1" : 0
+        "topic1": 0
     };
 
-     var countByUser = {
-         "userid" : 0
-     };
+    var countByUser = {
+        "userid": 0
+    };
 
 
-     blockchain.forEach((block) => {
-        if(block && block.data) {
+    blockchain.forEach((block) => {
+        if (block && block.data) {
             var userID = null;
             var topicId = null;
 
-            if(block.data.type == "V") {
+            if (block.data.type == "V") {
                 topicId = block.data.topicId;
-                if(countByTopic[topicId] == undefined) {
+                if (countByTopic[topicId] == undefined) {
                     countByTopic[countByTopic] = 0;
                 } else {
                     countByTopic[countByTopic]++;
                 }
 
                 var userId = block.data.userId;
-                if(countByTopic[userId] == undefined) {
+                if (countByTopic[userId] == undefined) {
                     countByTopic[userId] = 0;
                 } else {
                     countByTopic[userId]++;
