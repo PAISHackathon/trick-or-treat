@@ -1,12 +1,12 @@
 jQuery(document).ready(function () {
 
      $.ajax({
-			                url: "localhost:8080/topic?topicId="getUrlParameter(topicId),
+			                url: "localhost:8080/topic?topicId="+getUrlParameter("topicId"),
 			                type: "get",
 			                success: function (data) {
 			                	$('#title').val(data["topicTitle"]);
 			                	$('#description').val(data["topicDesc"]);
-			                	var options[] = data["options"]
+			                	var options = data["options"]
 			                	var markup = "<option value='"+options[0]+"'>"+options[0]+"</option>" +
 			                					"<option value='"+options[1]+"'>"+options[1]+"</option>"
 			                					"<option value='"+options[2]+"'>"+options[2]+"</option>"
