@@ -50,41 +50,10 @@ var MessageType = {
 };
 
 var getGenesisBlock = () => {
-    return new Block(0, "0", 1465154705, "my genesis block!!", "816534932c2b7154836da6afc367695e6337db8a921823784c14378abed4f7d7");
+    return new Block(0, "0", 1465154705, '{"type":"unknown","message":"my genesis block!!"}', "816534932c2b7154836da6afc367695e6337db8a921823784c14378abed4f7d7");
 };
 
 var blockchain = [getGenesisBlock()];
-
-// var voteBlockData = {
-//           type: "V",
-//           data: {
-//               userId: {public key},
-//               topicId: 1,
-//               optionId: 1
-//           }
-//       }
-//
-//       var topicBlockDate = {
-//                 type: "T",
-//                 data:{
-//                     topicId: 1,
-//                     topicTitle: "" (not blank),
-//                     topicDesc: "" (not blank),
-//                     startDate: timestamp (long),
-//                     endDate: timestamp (long),
-//                     options: {
-//                         id: "" (n number of options - atleast 1 option)
-//                     }
-//                 }
-//             }
-//
-//       var block = {
-//         index = index;
-//         previousHash = previousHash.toString();
-//         timestamp = timestamp;
-//         data = voteBlockData or topicBlockDate;
-//         hash = hash.toString();
-//       }
 
 var initHttpServer = () => {
     var app = express();
@@ -112,30 +81,12 @@ var initHttpServer = () => {
     app.use(bodyParser.json());
 
     app.get('/blocks', (req, res) => res.send(JSON.stringify(blockchain)));
-    // app.post('/mineBlock', (req, res) => {
-    //     var newBlock = generateNextBlock(req.body.data);
-    //     addBlock(newBlock);
-    //     broadcast(responseLatestMsg());
-    //     console.log('block added: ' + JSON.stringify(newBlock));
-    //     res.send();
-    // });
-    // This is the base API to be referred for other apis
-    // add topic
     app.post('/topic', (req, res) => {
         req.body.type = 'T';
         customValidations(req.body, function (err, response) {
             if (err) {
                 res.status("400").send(err)
             } else {
-                //            	var topicDataBlock = new TopicDataBlock(
-                //                		uuidv1(),
-                //    	    			req.body.topicTitle,
-                //    	    			req.body.topicDesc,
-                //    	    			req.body.startDate,
-                //    	    			req.body.endDate,
-                //    	    			req.body.options,
-                //    	    			req.body.userId
-                //                	);
                 var topicDataBlock = addTopic(req.body);
                 if (topicDataBlock) {
                     mineBlock(topicDataBlock, res)
@@ -151,12 +102,6 @@ var initHttpServer = () => {
             if (err) {
                 res.status("400").send(err)
             } else {
-                // add validation
-                //            	var voteDataBlock = new VoteDataBlock(
-                //            			req.body.userId,
-                //            			req.body.topicId,
-                //            			req.body.optionId
-                //                	);
                 var voteDataBlock = addVote(req.body);
                 if (voteDataBlock) {
                     mineBlock(voteDataBlock, res)
