@@ -4,6 +4,7 @@ var express = require("express");
 var bodyParser = require('body-parser');
 var WebSocket = require("ws");
 var customValidations = require("./customValidations");
+var uuidv1 = require('uuid/v1');
 
 var http_port = process.env.HTTP_PORT || 3001;
 var p2p_port = process.env.P2P_PORT || 6001;
@@ -77,7 +78,8 @@ var initHttpServer = () => {
     // });
     // This is the base API to be referred for other apis
     app.post('/topic', (req, res) => {
-        req.body.data.type = 'T';
+        req.body.type = 'T';
+        req.body.topicId = uuidv1();
         customValidations(req.body, function (err, response) {
             if (err) {
                 res.status("400").send(err)
@@ -87,7 +89,7 @@ var initHttpServer = () => {
         })
     });
     app.post('/vote', (req, res) => {
-        req.body.data.type = 'V';
+        req.body.type = 'V';
         customValidations(req.body, function (err, response) {
             if (err) {
                 res.status("400").send(err)
