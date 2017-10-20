@@ -1,25 +1,30 @@
 <html>
 <link rel="stylesheet" href="style.css" type="text/css">
+<script type="text/javascript" src="createTopic.js"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <body>
 <div id="formDiv" class="form-style-5">
-<h2>  BitPoll</h2>
+<h2> BitPoll </h2>
 
 <a href="SelectTopic.html">Vote for a created Poll</a>
 <form>
 <fieldset>
-<legend><span class="number">1</span> Create Topic</legend>
-<input type="text" name="field1" placeholder="Topic Title *">
-<input type="email" name="field2" placeholder="Topic Description *">
+<legend>Create Topic</legend>
+<input type="text" name="field1" id="topicTitle" placeholder="Topic Title *">
+<input type="text" name="field2" id="topicDesc" placeholder="Topic Description *">
+<span>Start Date: <input type="date" id="startDate" placeholder="Start Date"></span>
+<span>End Date: </span> <input type="date" id="endDate" placeholder="End Date"></span>
 <label for="job">Options:</label>
-<input type="text" name="opt1" placeholder="Option 1 *">
-<input type="text" name="opt2" placeholder="Option 2 *">
-<input type="text" name="opt3" placeholder="Option 3 *">
-<input type="text" name="opt4" placeholder="Option 4 *">    
+<input type="text" name="opt1" id="opt1" placeholder="Option 1 *">
+<input type="text" name="opt2" id="opt2" placeholder="Option 2 *">
+<input type="text" name="opt3" id="opt3" placeholder="Option 3 *">
+<input type="text" name="opt4" id="opt4" placeholder="Option 4 *">
 <fieldset>
-<legend><span class="number">2</span> Additional Info</legend>
-<textarea name="field3" placeholder="User Details"></textarea>
+<!-- <legend><span class="number">2</span> Additional Info</legend>
+<textarea name="field3" placeholder="User Details"></textarea> -->
 </fieldset>
-<input type="submit" value="Apply" />
+<input type="button" value="Apply" onClick="submitTopic()"/>
 </form>
 </div>
 </body>
