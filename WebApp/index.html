@@ -1,0 +1,42 @@
+<html>
+
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<link rel="stylesheet" href="style.css" type="text/css">
+<head>
+<script type="text/javascript">
+
+function checkSession() {
+    var user = localStorage.getItem("userid");
+    if (user != ""  && user != null) {
+        alert("Welcome again " + user);
+    } else {
+        user = prompt("Please enter your id:", "");
+        if (user != "" && user != null) {
+            localStorage.setItem("userid", user);
+        }
+    }
+}
+
+function signout() {
+    localStorage.setItem("userid", "");
+    $("#formDiv").hide();
+    window.location = "index.html";
+}
+
+jQuery(document).ready(function () {
+    checkSession();
+}); 
+
+</script>
+</head>
+<body>
+    <div id="formDiv" class="form-style-5">
+<h2>  BitPoll</h2>
+        <a href="CreateTopic.html">Create a new Topic</a>
+        <a href="SelectTopic.html">Vote for a created Poll</a>
+         <a href="ViewMyVotes.html">View My Votes</a>
+        <a href="#" onclick="javascript:signout()">signout</a>
+    </div>
+</body>
+</html>

@@ -5,7 +5,7 @@ jQuery(document).ready(function () {
 			                type: "get",
 			                success: function (data) {
 			                	data.forEach(function (item) {
-			                		var markup = "<tr onClick='voteFor("+data["topicId"]+")'><td>"+ data["title"] +"</td><td>"+ data["description"] + "</td><td>"+ data["startDate"] + "</td><td>"+ data["endDate"] + "</td><td>"+ data["userId"] + "</td></tr>";
+			                		var markup = "<tr onClick='voteFor("+data+")'><td>"+ data["title"] +"</td><td>"+ data["description"] + "</td><td>"+ data["startDate"] + "</td><td>"+ data["endDate"] + "</td><td>"+ data["userId"] + "</td></tr>";
             						$("#topicList").append(markup);
 			                	});
 			                },
@@ -15,3 +15,8 @@ jQuery(document).ready(function () {
 			            });
 
 });
+
+
+function voteFor(data){
+	window.location  = "Vote.html?topicId="+data["topicId"];
+}

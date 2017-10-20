@@ -9,8 +9,21 @@
 <div id="formDiv" class="form-style-5">
 <h2>  BitPoll</h2>
 
-<a href="CreateTopic.html">Create a new Topic</a>
-<form>
+<script type="text/javascript">
+
+
+function signout() {
+    localStorage.setItem("userid", "");
+    $("#formDiv").hide();
+    window.location = "index.html";
+}
+
+
+</script>
+        <a href="CreateTopic.html">Create a new Topic</a>
+        <a href="SelectTopic.html">Vote for a created Poll</a>
+         <a href="ViewMyVotes.html">View My Votes</a>
+         <a href="#" onclick="javascript:signout()">signout</a><form>
 <table id="topicList">
 <th>Topic Title</th>
 <th>Topic Description</th>
