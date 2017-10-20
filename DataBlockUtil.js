@@ -70,7 +70,11 @@ var addTopic = (blockData) => {
     var status = true;
     blockchain.forEach((block) => {
         if(block && block.data) {
-            if(block.data.type == "T" && block.data.topicId == topicId) {
+            //if(block.data.type == "T" && block.data.topicId == topicId) {
+            if(block.data.type == "T"
+                && block.data.topicTitle == topicTitle
+                && block.data.startDate == startDate
+                && block.data.endDate == endDate) {
                 status = false;
             }
         }

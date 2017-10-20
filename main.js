@@ -106,16 +106,21 @@ var initHttpServer = () => {
             if (err) {
                 res.status("400").send(err)
             } else {
-            	var topicDataBlock = new TopicDataBlock(
-                		uuidv1(),
-    	    			req.body.topicTitle,
-    	    			req.body.topicDesc,
-    	    			req.body.startDate,
-    	    			req.body.endDate,
-    	    			req.body.options,
-    	    			req.body.userId
-                	);
-                mineBlock(topicDataBlock, res)
+//            	var topicDataBlock = new TopicDataBlock(
+//                		uuidv1(),
+//    	    			req.body.topicTitle,
+//    	    			req.body.topicDesc,
+//    	    			req.body.startDate,
+//    	    			req.body.endDate,
+//    	    			req.body.options,
+//    	    			req.body.userId
+//                	);
+                var topicDataBlock = addTopic(req.body);
+                if (topicDataBlock) {
+                    mineBlock(topicDataBlock, res)
+                } else {
+                    res.status("400").send("error: Invalid Request. A topic already exists.")
+                }
             }
         })
     });
@@ -126,12 +131,17 @@ var initHttpServer = () => {
                 res.status("400").send(err)
             } else {
             	// add validation
-            	var voteDataBlock = new VoteDataBlock(
-            			req.body.userId,
-            			req.body.topicId,
-            			req.body.optionId
-                	);
-                mineBlock(voteDataBlock, res)
+//            	var voteDataBlock = new VoteDataBlock(
+//            			req.body.userId,
+//            			req.body.topicId,
+//            			req.body.optionId
+//                	);
+                var voteDataBlock = addVote(req.body);
+                if (voteDataBlock) {
+                    mineBlock(voteDataBlock, res)
+                } else {
+                    res.status("400").send("error: Invalid Vote!")
+                }
             }
         })
     });
@@ -323,3 +333,75 @@ var broadcast = (message) => sockets.forEach(socket => write(socket, message));
 connectToPeers(initialPeers);
 initHttpServer();
 initP2PServer();
+
+
+/// Nitin ///
+var addVote = (blockData) => {
+    //console.log("one");
+    var userId = blockData.userId;
+    var topicId = blockData.topicId;
+    var optionId = blockData.optionId;
+
+    var topicBlock;
+    var status = true;
+    blockchain.forEach((block) => {
+        console.log(block);
+        if(block.data.type == "V") {
+            if(block.data.userId == userId) {
+                status = false;
+            }
+        } else if(block && block.data && block.data.type == "T" && block.data.topicId == topicId) {
+            topicBlock = block.data;
+            status = false;
+            if (block.data.options) {
+                block.data.options.forEach((op) => {
+                    if (op == optionId) {
+                        status = true;
+                    }
+                })
+            }
+        }
+    });
+    if (topicBlock && status) {
+        var vdb = new VoteDataBlock(userId, topicId, optionId);
+        //console.log(vdb);
+        return vdb;
+    }
+};
+
+var addTopic = (blockData) => {
+    var topicId = blockData.topicId;
+    var topicTitle = blockData.topicTitle;
+    var topicDesc = blockData.topicDesc;
+    var startDate = blockData.startDate;
+    var endDate = blockData.endDate;
+    var options = blockData.options;
+
+    var status = true;
+    blockchain.forEach((block) => {
+        if(block && block.data) {
+            //if(block.data.type == "T" && block.data.topicId == topicId) {
+            if(block.data.type == "T"
+                && block.data.topicTitle == topicTitle
+                && block.data.startDate == startDate
+                && block.data.endDate == endDate) {
+                status = false;
+            }
+        }
+    });
+
+    if (status) {
+        var topicDataBlock = new TopicDataBlock(
+                                  		uuidv1(),
+                      	    			blockData.topicTitle,
+                      	    			blockData.topicDesc,
+                      	    			blockData.startDate,
+                      	    			blockData.endDate,
+                      	    			blockData.options,
+                      	    			blockData.userId
+                                  	);
+        //console.log(tdb);
+        return topicDataBlock;
+    }
+}
+///// End:Nitin //////
