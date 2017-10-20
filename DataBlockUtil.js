@@ -24,15 +24,6 @@ class TopicDataBlock {
         this.endDate = endDate;
         this.options = options;
     }
-
-    topicId: 1,
-    //                     topicTitle: "" (not blank),
-    //                     topicDesc: "" (not blank),
-    //                     startDate: timestamp (long),
-    //                     endDate: timestamp (long),
-    //                     options: {
-    //                         id: "" (n number of options - atleast 1 option)
-    //                     }
 }
 
 class VoteDataBlock {
@@ -44,18 +35,18 @@ class VoteDataBlock {
     }
 }
 
-var doVote = (blockData) => {
+var addVote = (blockData) => {
     var userId = blockData.userId;
     var topicId = blockData.topicId;
     var optionId = blockData.optionId;
 
     var topicBlock = null;
     blockchain.forEach((block) => {
-        if(block.type == "V") {
+        if(block.data.type == "V") {
             if(block.data.userId == userId) {
                 return false;
             }
-        } else if(block.type == "T" && block.data.topicId == topicId) {
+        } else if(block.data.type == "T" && block.data.topicId == topicId) {
             topicBlock = block;
             if (topicBlock.options[optionId] == undefined) {
                 return false;
@@ -66,10 +57,15 @@ var doVote = (blockData) => {
     return topicBlock == null ? null : new VoteDataBlock(userId, topicId, optionId);
 };
 
+var addTopic = (blockData) => {
+    return
+}
+
 var bd = {
     userId : "aaa",
     topicId : "bbb",
     optionId : "ccc"
 }
+
 
 console.log(doVote(bd));
