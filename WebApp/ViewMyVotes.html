@@ -1,81 +1,79 @@
 <html>
-    <head>
-        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
-       <link rel="stylesheet" href="style.css" type="text/css">
+<head>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
-       <script type="text/javascript">
+    <link rel="stylesheet" href="style.css" type="text/css">
+
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+            $.ajax({
+                url: "http://localhost:3001/vote?userId=" + localStorage.getItem("userid"),
+                type: "get",
+                success: function (data) {
+                    var dataParsed = JSON.parse(data)
+                    dataParsed.forEach(function (item) {
+                        var markup = "<tr>" +
+                            "<td>" + item["topicTitle"] + "</td><td>" + item["topicDesc"] +
+                            "</td><td>" + item["startDate"] + "</td><td>" + item["endDate"] +
+                            "</td><td>" + item["optionId"] + "</td></tr>";
+
+                        $("#voteList").append(markup);
+                    });
+                },
+                error: function (response) {
+                    alert("Error While Fetching Votes " + response);
+                }
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <div id="formDiv" class="form-style-5">
+        <h2> My Votes</h2>
+
+        <script type="text/javascript">
+            function signout() {
+                localStorage.setItem("userid", "");
+                $("#formDiv").hide();
+                window.location = "index.html";
+            }
+
+            function checkSession() {
+                var user = localStorage.getItem("userid");
+                if (user != "" && user != null) {
+
+                } else {
+                    user = prompt("Please enter your id:", "");
+                    if (user != "" && user != null) {
+                        localStorage.setItem("userid", user);
+                    }
+                }
+            }
             jQuery(document).ready(function () {
-                 $.ajax({
-                                    url: "http://localhost:3001/vote?userId="+localStorage.getItem("userid"),
-                                    type: "get",
-                                    success: function (data) {
-                                        data.forEach(function (item) {
-                                            var markup = "<tr>"
-                                                + "<td>" + data["topicTitle"] + "</td>"+
-                                                + "<td>" + data["topicDesc"] + "</td>"+
-                                                + "<td>" + data["startDate"] + "</td>"+
-                                                + "<td>" + data["endDate"] + "</td>"+
-                                                + "<td>" + data["optionText"] + "</td>"+
-                                                +"</tr>";
-
-                                           $("#voteList").append(markup);
-                                        });
-                                    },
-                                    error: function (response) {
-                                        alert("Error While Fetching Votes "+response);
-                                    }
-                                });
-                   });
+                checkSession();
+            });
         </script>
-    </head>
-
-   <body>
-        <div id="formDiv" class="form-style-5">
-        <h2>  My Votes</h2>
-
-<script type="text/javascript">
-
-
-
-function signout() {
-    localStorage.setItem("userid", "");
-    $("#formDiv").hide();
-    window.location = "index.html";
-}
-function checkSession() {
-    var user = localStorage.getItem("userid");
-    if (user != ""  && user != null) {
-
-    } else {
-        user = prompt("Please enter your id:", "");
-        if (user != "" && user != null) {
-            localStorage.setItem("userid", user);
-        }
-    }
-}
-jQuery(document).ready(function () {
-    checkSession();
-});
-</script>
         <a href="CreateTopic.html">Create a new Topic</a>
         <a href="SelectTopic.html">Vote for a created Poll</a>
-         <a href="ViewMyVotes.html">View My Votes</a>
-         <a href="#" onclick="javascript:signout()">signout</a>
+        <a href="ViewMyVotes.html">View My Votes</a>
+        <a href="#" onclick="javascript:signout()">signout</a>
 
-       <form>
-        <table id="voteList">
+        <form>
+            <table id="voteList">
                 <tr>
-                        <th>Topic Title</th>
-                        <th>Topic Description</th>
-                        <th>Start Date</th>
-                        <th>End Date</th>
-                        <th>Voted Option</th>
-                    </tr>
+                    <th>Topic Title</th>
+                    <th>Topic Description</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Voted Option</th>
+                </tr>
 
-       </table>
+            </table>
         </form>
-        </div>
-        </body>
-        </html>
+    </div>
+</body>
+
+</html>
