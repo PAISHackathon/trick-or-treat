@@ -4,6 +4,7 @@ jQuery(document).ready(function () {
 			                url: "http://localhost:3001/topic?topicId="+getUrlParameter("topicId"),
 			                type: "get",
 			                success: function (data) {
+			                    var data = JSON.parse(data)
 			                	$('#title').val(data["topicTitle"]);
 			                	$('#description').val(data["topicDesc"]);
 			                	var options = data["options"]
