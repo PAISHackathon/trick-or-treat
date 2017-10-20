@@ -2,13 +2,13 @@
     <head>
         <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-        
+
        <link rel="stylesheet" href="style.css" type="text/css">
-    
+
        <script type="text/javascript">
             jQuery(document).ready(function () {
                  $.ajax({
-                                    url: "localhost:8080/vote?userId="+localStorage.getItem("userid"),
+                                    url: "http://localhost:3001/vote?userId="+localStorage.getItem("userid"),
                                     type: "get",
                                     success: function (data) {
                                         data.forEach(function (item) {
@@ -30,11 +30,11 @@
                    });
         </script>
     </head>
-    
+
    <body>
         <div id="formDiv" class="form-style-5">
         <h2>  My Votes</h2>
-        
+
 <script type="text/javascript">
 
 
@@ -47,7 +47,7 @@ function signout() {
 function checkSession() {
     var user = localStorage.getItem("userid");
     if (user != ""  && user != null) {
-        
+
     } else {
         user = prompt("Please enter your id:", "");
         if (user != "" && user != null) {
@@ -57,13 +57,13 @@ function checkSession() {
 }
 jQuery(document).ready(function () {
     checkSession();
-}); 
+});
 </script>
         <a href="CreateTopic.html">Create a new Topic</a>
         <a href="SelectTopic.html">Vote for a created Poll</a>
          <a href="ViewMyVotes.html">View My Votes</a>
          <a href="#" onclick="javascript:signout()">signout</a>
-        
+
        <form>
         <table id="voteList">
                 <tr>

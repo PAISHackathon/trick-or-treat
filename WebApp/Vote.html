@@ -21,7 +21,7 @@ function signout() {
 function checkSession() {
     var user = localStorage.getItem("userid");
     if (user != ""  && user != null) {
-        
+
     } else {
         user = prompt("Please enter your id:", "");
         if (user != "" && user != null) {
@@ -31,7 +31,7 @@ function checkSession() {
 }
 jQuery(document).ready(function () {
     checkSession();
-});  
+});
 </script>
         <a href="CreateTopic.html">Create a new Topic</a>
         <a href="SelectTopic.html">Vote for a created Poll</a>
@@ -44,10 +44,10 @@ jQuery(document).ready(function () {
 <input type="email" name="description" value="select your favorite hobbies" disabled>
 <label for="options">Options:</label>
 <select id="options" name="options">
-</select>     
-</fieldset>  
+</select>
+</fieldset>
 <fieldset>
-<input type="submit" value="Apply" />
+<input type="button" value="Apply" onClick="submitVote()"/>
 </form>
 </div>
 </body>
