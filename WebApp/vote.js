@@ -1,7 +1,7 @@
 jQuery(document).ready(function () {
 
      $.ajax({
-			                url: "localhost:8080/topic?topicId="+getUrlParameter("topicId"),
+			                url: "http://localhost:3001/topic?topicId="+getUrlParameter("topicId"),
 			                type: "get",
 			                success: function (data) {
 			                	$('#title').val(data["topicTitle"]);
@@ -32,4 +32,24 @@ jQuery(document).ready(function () {
         }
     }
 };
+
+function submitVote() {
+		$.ajax({
+	        url: 'http://localhost:3001/vote',
+	        type: 'post',
+	        contentType: 'application/json',
+	        data: JSON.stringify({
+	            optionId: $('#options').find(":selected").text(),
+	            topicId: getUrlParameter("topicId"),
+	            userId: localStorage.getItem("userid")
+	        }),
+	        success: function () {
+	            alert('Vote submitted Successfully.')
+	            window.location = 'ViewMyVotes.html'
+	        },
+	        error: function (response) {
+	            alert('Error in submitting your vote')
+	        }
+	    });
+	}
 });
