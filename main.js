@@ -166,13 +166,43 @@ var initHttpServer = () => {
             }
         })
     });
+//    app.get('/topic', (req, res) => {
+//      if(req.params.id) {
+//        // for particular topic
+//      } else {
+//        // for all topics
+//      }
+//    });
+
+
     app.get('/topic', (req, res) => {
-      if(req.params.id) {
-        // for particular topic
-      } else {
-        // for all topics
-      }
-    });
+           if (req.query.topicId) {
+               var topic = (blockchain.filter(a => a.data.type == "T")).filter(function (b) {
+                   if (b.data && b.data.topicId == req.query.topicId) {
+                       return b
+                   } else {
+                       return null;
+                   }
+               });
+               con
+               if (topic.length > 0) {
+                   res.send(JSON.stringify(topic[0].data));
+               } else {
+                   res.send();
+               }
+           } else {
+               var topicsFromBlockChain = blockchain.filter(a => a.data.type == "T")
+               var topics = []
+               for (var i = 0; i < topicsFromBlockChain.length; i++) {
+                   topics.push(topicsFromBlockChain[i].data)
+               }
+               //topics.optionVoteCount = countVotes(topic)
+               //res.send(JSON.stringify(topics));
+               res.send(JSON.stringify(countVotes(topic)));
+           }
+       });
+
+
     app.get('/vote', (req, res) => {
       if(req.params.userId) {
         // for particular user
@@ -455,5 +485,5 @@ function countVotes () {
                 }
             }
         }
-    }
+    });
 }
