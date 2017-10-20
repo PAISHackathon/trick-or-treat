@@ -355,8 +355,6 @@ connectToPeers(initialPeers);
 initHttpServer();
 initP2PServer();
 
-
-/// Nitin ///
 var addVote = (blockData) => {
     //console.log("one");
     var userId = blockData.userId;
@@ -425,4 +423,37 @@ var addTopic = (blockData) => {
         return topicDataBlock;
     }
 }
-///// End:Nitin //////
+
+function countVotes () {
+    var countByTopic = {
+        "topic1" : 0
+    };
+
+     var countByUser = {
+         "userid" : 0
+     };
+
+
+     blockchain.forEach((block) => {
+        if(block && block.data) {
+            var userID = null;
+            var topicId = null;
+
+            if(block.data.type == "V") {
+                topicId = block.data.topicId;
+                if(countByTopic[topicId] == undefined) {
+                    countByTopic[countByTopic] = 0;
+                } else {
+                    countByTopic[countByTopic]++;
+                }
+
+                var userId = block.data.userId;
+                if(countByTopic[userId] == undefined) {
+                    countByTopic[userId] = 0;
+                } else {
+                    countByTopic[userId]++;
+                }
+            }
+        }
+    }
+}
