@@ -21,10 +21,10 @@ module.exports = function customValidations(object, cb) {
                 error["endDate"] = "endDate is empty";
             }
     } else if (object["type"] === "V") {
-            if (!object.userId || !validator.isUUID(object.userId)) {
-                error["userId"] = "userId is invalid";
+            if (!object.userId) {
+                error["userId"] = "userId is empty";
             }
-            if (!object.topicId || !validator.isUUID(object.topicId)) {
+            if (!object.topicId) {
                 error["topicId"] = "topicId is empty";
             }
             if (!object.optionId) {

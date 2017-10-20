@@ -33,6 +33,15 @@ class TopicDataBlock {
     }
 }
 
+class VoteDataBlock {
+    constructor(userId, topicId, optionId) {
+        this.type = "V";
+        this.userId = userId;
+        this.topicId = topicId;
+        this.optionId = optionId;
+    }
+}
+
 var sockets = [];
 var MessageType = {
     QUERY_LATEST: 0,
@@ -116,7 +125,13 @@ var initHttpServer = () => {
             if (err) {
                 res.status("400").send(err)
             } else {
-                mineBlock(req, res)
+            	// add validation
+            	var voteDataBlock = new VoteDataBlock(
+            			req.body.userId,
+            			req.body.topicId,
+            			req.body.optionId
+                	);
+                mineBlock(voteDataBlock, res)
             }
         })
     });
