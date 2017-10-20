@@ -44,7 +44,20 @@ function signout() {
     $("#formDiv").hide();
     window.location = "index.html";
 }
-
+function checkSession() {
+    var user = localStorage.getItem("userid");
+    if (user != ""  && user != null) {
+        
+    } else {
+        user = prompt("Please enter your id:", "");
+        if (user != "" && user != null) {
+            localStorage.setItem("userid", user);
+        }
+    }
+}
+jQuery(document).ready(function () {
+    checkSession();
+}); 
 </script>
         <a href="CreateTopic.html">Create a new Topic</a>
         <a href="SelectTopic.html">Vote for a created Poll</a>
