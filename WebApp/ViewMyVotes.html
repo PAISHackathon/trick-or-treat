@@ -1,0 +1,55 @@
+<html>
+    <head>
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        
+       <link rel="stylesheet" href="style.css" type="text/css">
+    
+       <script type="text/javascript">
+            jQuery(document).ready(function () {
+                 $.ajax({
+                                    url: "localhost:8080/vote?userId=1",
+                                    type: "get",
+                                    success: function (data) {
+                                        data.forEach(function (item) {
+                                            var markup = "<tr>"
+                                                + "<td>" + data["topicTitle"] + "</td>"+
+                                                + "<td>" + data["topicDesc"] + "</td>"+
+                                                + "<td>" + data["startDate"] + "</td>"+
+                                                + "<td>" + data["endDate"] + "</td>"+
+                                                + "<td>" + data["optionText"] + "</td>"+
+                                                +"</tr>";
+
+                                           $("#voteList").append(markup);
+                                        });
+                                    },
+                                    error: function (response) {
+                                        alert("Error While Fetching Votes "+response);
+                                    }
+                                });
+                   });
+        </script>
+    </head>
+    
+   <body>
+        <div id="formDiv" class="form-style-5">
+        <h2>  My Votes</h2>
+        
+       <a href="CreateTopic.html">Create a new Topic</a>
+        <a href="SelectTopic.html">Vote for a created Poll</a>
+        
+       <form>
+        <table id="voteList">
+                <tr>
+                        <th>Topic Title</th>
+                        <th>Topic Description</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Voted Option</th>
+                    </tr>
+
+       </table>
+        </form>
+        </div>
+        </body>
+        </html>
