@@ -16,7 +16,7 @@ function submitTopic() {
             startDate: $('#startDate').val(),
             endDate: $('#endDate').val(),
             options: options,
-            userId: '0xjhdsakdhaskjdasjdhsajiodjasld'
+            userId: localStorage.getItem("userid")
         }),
         dataType: 'json',
         success: function (data) {
