@@ -3,6 +3,7 @@ var CryptoJS = require("crypto-js");
 var express = require("express");
 var bodyParser = require('body-parser');
 var WebSocket = require("ws");
+var customValidations = require("./customValidations");
 
 var http_port = process.env.HTTP_PORT || 3001;
 var p2p_port = process.env.P2P_PORT || 6001;
@@ -77,11 +78,23 @@ var initHttpServer = () => {
     // This is the base API to be referred for other apis
     app.post('/topic', (req, res) => {
         req.body.data.type = 'T';
-        mineBlock(req, res)
+        customValidations(req.body, function (err, response) {
+            if (err) {
+                res.status("400").send(err)
+            } else {
+                mineBlock(req, res)
+            }
+        })
     });
     app.post('/vote', (req, res) => {
         req.body.data.type = 'V';
-        mineBlock(req, res)
+        customValidations(req.body, function (err, response) {
+            if (err) {
+                res.status("400").send(err)
+            } else {
+                mineBlock(req, res)
+            }
+        })
     });
     app.get('/topic', (req, res) => {
       if(req.params.id) {
